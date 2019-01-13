@@ -45,15 +45,25 @@ class P2pServer {
     // check if any message
     this.messageHandler(socket);
 
-    // broadcast blockchain to all peers(sockets) (only sends strings)
-    socket.send(JSON.stringify(this.blockchain));
+    this.sendChain(socket);
   }
 
   // whenever gets a message, parse it and log it on console
   messageHandler(socket) {
     socket.on("message", message => {
-      console.log("data", JSON.parse(message));
+      const data = JSON.parse(message);
+      this.blockchain.replaceChain(data);
     });
+  }
+
+  sendChain(socket) {
+    // broadcast blockchain to all peers(sockets) (only sends strings)
+    socket.send(JSON.stringify(this.blockchain.chain));
+  }
+
+  // send the updated blockchain of this current instance to all socket peers
+  syncChain() {
+    this.sockets.forEach(socket => this.sendChain(socket));
   }
 }
 
