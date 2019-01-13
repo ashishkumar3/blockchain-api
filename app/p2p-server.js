@@ -17,9 +17,11 @@ class P2pServer {
   listen() {
     // create a websocket server on P2P_PORT
     const server = new Websocket.Server({ port: P2P_PORT });
-    // wait for connection event to occur, then run connectSocket function for every connected socket.
+
+    // wait for connection event to occur, then run connectSocket function for the websocket server.
     server.on("connection", socket => this.connectSocket(socket));
 
+    // when connection is made, try and find sockets(peers) to connect
     this.connectToPeers();
 
     console.log(`Listening for peer-to-peer connection on: ${P2P_PORT}`);
@@ -28,16 +30,30 @@ class P2pServer {
   connectToPeers() {
     peers.forEach(peer => {
       const socket = new Websocket(peer);
-
+      console.log("a new peer connected.");
+      // for each socket check if connection is open, if yes connect to that socket (connectSocket())
       socket.on("open", () => this.connectSocket(socket));
     });
   }
 
-  // when a peer(socekt) is connected to this network
+  // when a peer(socket) is connected to this network
   connectSocket(socket) {
+    // add to the sockets array
     this.sockets.push(socket);
     console.log("Socket Connected");
-    // console.log(socket);
+
+    // check if any message
+    this.messageHandler(socket);
+
+    // broadcast blockchain to all peers(sockets) (only sends strings)
+    socket.send(JSON.stringify(this.blockchain));
+  }
+
+  // whenever gets a message, parse it and log it on console
+  messageHandler(socket) {
+    socket.on("message", message => {
+      console.log("data", JSON.parse(message));
+    });
   }
 }
 
