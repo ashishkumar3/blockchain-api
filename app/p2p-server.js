@@ -3,7 +3,7 @@ const Websocket = require("ws");
 // port to run server on every computer(peer)
 const P2P_PORT = process.env.P2P_PORT || 5001;
 
-// list of peers connected to the server
+// list of peers connected to the server on the following addresses(with ports)
 // HTTP_PORT=3002 P2P_PORT=5003... PEERS=ws://localhost:5001,ws://localhost:5002... npm run dev
 // then we create an array of all web sockets addresses (PEERS=ws://localhost:5001,ws://localhost:5002...) only if the PEERS environment variable is present.
 const peers = process.env.PEERS ? process.env.PEERS.split(",") : [];
@@ -31,7 +31,7 @@ class P2pServer {
     peers.forEach(peer => {
       const socket = new Websocket(peer);
       console.log("a new peer connected.");
-      // for each socket check if connection is open, if yes connect to that socket (connectSocket())
+      // for each peer address check if connection is open, then connect to that address (connectSocket())
       socket.on("open", () => this.connectSocket(socket));
     });
   }
@@ -45,6 +45,7 @@ class P2pServer {
     // check if any message
     this.messageHandler(socket);
 
+    // send the blockchain across peer(socket) network
     this.sendChain(socket);
   }
 
