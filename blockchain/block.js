@@ -1,6 +1,5 @@
 const SHA256 = require("crypto-js/sha256");
-
-const DIFFICULTY = 4;
+const { DIFFICULTY } = require("../config");
 
 class Block {
   constructor(timestamp, lasthash, hash, data, nonce) {
@@ -39,7 +38,7 @@ class Block {
     } while (hash.substring(0, DIFFICULTY) !== "0".repeat(DIFFICULTY));
 
     // return the hash which satisfy the nonce
-    return new this(timestamp, lastHash, hash, data);
+    return new this(timestamp, lastHash, hash, data, nonce);
   }
 
   // create hash for every block created using sha256
