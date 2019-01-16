@@ -1,10 +1,11 @@
 const { INITIAL_BALANCE } = require("../config");
+const ChainUtil = require("../chian-util");
 
 class Wallet {
   constructor() {
     this.balance = INITIAL_BALANCE;
-    this.keyPaor = null;
-    this.publicKey = null;
+    this.keyPair = ChainUtil.genKeyPair();
+    this.publicKey = this.keyPair.getPublic().encode("hex");
   }
 
   toString() {
