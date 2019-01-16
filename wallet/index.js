@@ -1,5 +1,5 @@
 const { INITIAL_BALANCE } = require("../config");
-const ChainUtil = require("../chian-util");
+const ChainUtil = require("../chain-util");
 
 class Wallet {
   constructor() {
