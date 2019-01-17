@@ -8,7 +8,7 @@ describe("Transaction", () => {
     wallet = new Wallet();
     amount = 50;
     recepient = "recepient";
-    transaction = new Transaction.newTransaction(wallet, recepient, amount);
+    transaction = Transaction.newTransaction(wallet, recepient, amount);
   });
 
   it("outputs the `amount` subtracted from the wallet balance", () => {
@@ -16,5 +16,25 @@ describe("Transaction", () => {
       transaction.outputs.find(output => output.address === wallet.publicKey)
         .amount
     ).toEqual(wallet.balance - amount);
+  });
+
+  it("outputs the public key of the senders wallet", () => {
+    expect(
+      transaction.outputs.find(output => output.address === wallet.publicKey)
+        .address
+    ).toEqual(wallet.publicKey);
+  });
+
+  it("outputs the amount to be send to the recepient", () => {
+    expect(
+      transaction.outputs.find(output => output.address === wallet.publicKey)
+        .amount
+    ).toEqual(amount);
+  });
+
+  it("outputs the address of the recepient", () => {
+    expect(
+      transaction.outputs.find(output => output.address === recepient).address
+    ).toEqual(recepient);
   });
 });
