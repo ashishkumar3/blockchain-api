@@ -29,7 +29,11 @@ class Transaction {
     // everytime a transaction is created we sign it.
     Transaction.signTransaction(transaction, senderWallet);
 
-    return transaction;
+    if (Transaction.verifyTransaction(transaction, senderWallet)) {
+      return transaction;
+    } else {
+      console.log("Data might have been tempered");
+    }
   }
 
   static signTransaction(transaction, senderWallet) {
@@ -40,6 +44,16 @@ class Transaction {
       // sigining the outputs array which has all the data related to a particular transaction.
       signature: senderWallet.sign(ChainUtil.hash(transaction.outputs))
     };
+  }
+
+  static verifyTransaction(transaction, senderWallet) {
+    // console.log(transaction);
+
+    const derSign = transaction.input.signature.toDER();
+    return senderWallet.keyPair.verify(
+      ChainUtil.hash(transaction.outputs),
+      derSign
+    );
   }
 }
 

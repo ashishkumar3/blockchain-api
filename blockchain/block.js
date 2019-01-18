@@ -33,7 +33,7 @@ class Block {
     const lastHash = lastBlock.hash;
     let { difficulty } = lastBlock;
 
-    // increment nonce until we get the nummber of leading zeroes same as DIFFICULTY and find hash for each
+    // increment nonce until we get the number of leading zeroes same as DIFFICULTY and find hash for each
     do {
       nonce++;
       timestamp = Date.now();

@@ -41,4 +41,10 @@ describe("Transaction", () => {
   it("inputs the balance of the wallet", () => {
     expect(transaction.input.amount).toEqual(wallet.balance);
   });
+
+  it("verify the successfull transaction", () => {
+    expect(Transaction.verifyTransaction(transaction, wallet)).toBe(true);
+  });
+
+  it("rejects the tempered transaction", () => {});
 });
