@@ -2,13 +2,13 @@ const Transaction = require("./transaction");
 const Wallet = require("./index");
 
 describe("Transaction", () => {
-  let transaction, wallet, recepient, amount;
+  let transaction, wallet, recipient, amount;
 
   beforeEach(() => {
     wallet = new Wallet();
     amount = 50;
-    recepient = "recepient";
-    transaction = Transaction.newTransaction(wallet, recepient, amount);
+    recipient = "recepient";
+    transaction = Transaction.newTransaction(wallet, recipient, amount);
   });
 
   it("outputs the `amount` subtracted from the wallet balance", () => {
@@ -18,24 +18,21 @@ describe("Transaction", () => {
     ).toEqual(wallet.balance - amount);
   });
 
-  it("outputs the public key of the senders wallet", () => {
-    expect(
-      transaction.outputs.find(output => output.address === wallet.publicKey)
-        .address
-    ).toEqual(wallet.publicKey);
-  });
-
   it("outputs the amount to be send to the recepient", () => {
     expect(
-      transaction.outputs.find(output => output.address === wallet.publicKey)
-        .amount
+      transaction.outputs.find(output => output.address === recipient).amount
     ).toEqual(amount);
   });
 
-  it("outputs the address of the recepient", () => {
-    expect(
-      transaction.outputs.find(output => output.address === recepient).address
-    ).toEqual(recepient);
+  describe("transacting with an amount that exceeds the balance", () => {
+    beforeEach(() => {
+      amount = 10000;
+      transaction = Transaction.newTransaction(wallet, recipient, amount);
+    });
+
+    it("does not create the transaction", () => {
+      expect(transaction).toEqual(undefined);
+    });
   });
 
   it("inputs the balance of the wallet", () => {
@@ -43,8 +40,11 @@ describe("Transaction", () => {
   });
 
   it("verify the successfull transaction", () => {
-    expect(Transaction.verifyTransaction(transaction, wallet)).toBe(true);
+    expect(Transaction.verifyTransaction(transaction)).toBe(true);
   });
 
-  it("rejects the tempered transaction", () => {});
+  it("rejects the tempered/corrupt transaction", () => {
+    transaction.outputs[0].amount = 10000;
+    expect(Transaction.verifyTransaction(transaction)).toBe(false);
+  });
 });
