@@ -37,4 +37,8 @@ describe("Transaction", () => {
       transaction.outputs.find(output => output.address === recepient).address
     ).toEqual(recepient);
   });
+
+  it("inputs the balance of the wallet", () => {
+    expect(transaction.input.amount).toEqual(wallet.balance);
+  });
 });
