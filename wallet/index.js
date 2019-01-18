@@ -13,6 +13,11 @@ class Wallet {
       Balance    : ${this.balance}
       Public Key : ${this.publicKey}`;
   }
+
+  // we use hash here so that we do not have to sign a very lagre object, instead we use a fixed charqacter hash.
+  sign(dataHash) {
+    return this.keyPair.sign(dataHash);
+  }
 }
 
 module.exports = Wallet;

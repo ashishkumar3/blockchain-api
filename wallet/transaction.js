@@ -26,7 +26,20 @@ class Transaction {
       ]
     );
 
+    // everytime a transaction is created we sign it.
+    Transaction.signTransaction(transaction, senderWallet);
+
     return transaction;
+  }
+
+  static signTransaction(transaction, senderWallet) {
+    transaction.input = {
+      timestamp: Date.now(),
+      amount: senderWallet.amount,
+      address: senderWallet.publicKey,
+      // sigining the outputs array which has all the data related to a particular transaction.
+      signature: senderWallet.sign(ChainUtil.hash(transaction.outputs))
+    };
   }
 }
 
