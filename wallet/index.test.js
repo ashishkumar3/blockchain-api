@@ -10,7 +10,7 @@ describe("Wallet", () => {
   });
 
   // situation where a wallet is creating a transaction
-  describe(() => {
+  describe("creating a transaction", () => {
     let transaction, sendAmount, recipient;
 
     beforeEach(() => {
@@ -21,22 +21,32 @@ describe("Wallet", () => {
         sendAmount,
         transactionPool
       );
-
-      // situation where we are doing the same transaction
-      describe(" doing the same transaction", () => {
-        beforeEach(() => {
-          wallet.createTransaction(recipient, sendAmount, transactionPool);
-        });
-
-        //
-        it("doubles the send amount subtracted from the wallet balance");
-
-        //
-        it("clones the sendamount output for the recipient");
-
-        //
-        it();
+    });
+    // situation where we are doing the same transaction
+    describe(" doing the same transaction", () => {
+      beforeEach(() => {
+        wallet.createTransaction(recipient, sendAmount, transactionPool);
       });
+
+      //
+      it("doubles the send amount subtracted from the wallet balance", () => {
+        expect(
+          transaction.outputs.find(
+            output => output.address === wallet.publicKey
+          ).amount
+        ).toEqual(wallet.balance - sendAmount * 2);
+      });
+
+      it("clones the send amount output for the recipient", () => {
+        expect(
+          transaction.outputs
+            .filter(output => output.address === recipient)
+            .map(output => output.amount)
+        ).toEqual([sendAmount, sendAmount]);
+      });
+
+      //
+      // it();
     });
   });
 });

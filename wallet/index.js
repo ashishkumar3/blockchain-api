@@ -33,7 +33,7 @@ class Wallet {
     }
 
     // check if the trasaction already exists
-    let transaction = Transaction.existingTransaction(this.publicKey);
+    let transaction = transactionPool.existingTransaction(this.publicKey);
 
     // if yes
     if (transaction) {
@@ -44,7 +44,7 @@ class Wallet {
       // create the new transaction
       transaction = Transaction.newTransaction(this, recipient, amount);
       // add it to the mempool
-      transactionPool.updateOrAddTransction(transaction);
+      transactionPool.updateOrAddTransaction(transaction);
     }
 
     return transaction;

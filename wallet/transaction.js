@@ -2,7 +2,9 @@ const ChainUtil = require("../chain-util");
 
 // Every transaction object contains unique id, input and output
 // while creating a transaction a user has to pass his totalbalance, signature and public key of the wallet.
-// the output contains the array of objects 1. First object contains amount to send and address to which the amount has to be sent. 2. Sencond object contains the amount that the sender recieve back(change) and the address to wich the change is to be sent i.e. senders own address(public key)
+// the output contains the array of objects
+// First object contains amount to send and address to which the amount has to be sent.
+// Sencond object contains the amount that the sender recieve back(change) and the address to wich the change is to be sent i.e. senders own address(public key)
 
 class Transaction {
   constructor() {
