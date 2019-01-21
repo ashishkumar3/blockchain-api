@@ -44,9 +44,6 @@ describe("Wallet", () => {
             .map(output => output.amount)
         ).toEqual([sendAmount, sendAmount]);
       });
-
-      //
-      // it();
     });
   });
 });
