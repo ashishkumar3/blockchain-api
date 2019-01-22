@@ -32,6 +32,10 @@ app.get("/transactions", (req, res) => {
   res.json(tp.transactions);
 });
 
+app.get("/public-key", (req, res) => {
+  res.json({ publicKey: wallet.publicKey });
+});
+
 app.post("/transact", (req, res) => {
   // we assume that the user sends the address and amount through post request
   const { recipient, amount } = req.body;

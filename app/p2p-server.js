@@ -1,3 +1,4 @@
+// try to implement in socketio, currently in websockets
 const Websocket = require("ws");
 
 // port to run server on every computer(peer)
@@ -21,6 +22,7 @@ class P2pServer {
     this.sockets = [];
   }
 
+  // run the p2p server
   listen() {
     // create a websocket server on P2P_PORT
     const server = new Websocket.Server({ port: P2P_PORT });
@@ -38,6 +40,7 @@ class P2pServer {
     peers.forEach(peer => {
       const socket = new Websocket(peer);
       console.log("a new peer connected.");
+      console.log(socket);
       // for each peer address check if connection is open, then connect to that address (connectSocket())
       socket.on("open", () => this.connectSocket(socket));
     });
