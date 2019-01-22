@@ -100,7 +100,7 @@ class P2pServer {
     this.sockets.forEach(socket => this.sendChain(socket));
   }
 
-  // synchronise transaction pool across the peep-to-peer network.
+  // synchronize transaction pool across the peep-to-peer network.
   broadcastTransaction(transaction) {
     this.sockets.forEach(socket => this.sendTransaction(socket, transaction));
   }

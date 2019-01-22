@@ -8,8 +8,7 @@ describe("Transaction Pool", () => {
   beforeEach(() => {
     tp = new TransactionPool();
     wallet = new Wallet();
-    transaction = Transaction.newTransaction(wallet, "some-address", 30);
-    tp.updateOrAddTransaction(transaction);
+    transaction = wallet.createTransaction("recipient address", 40);
   });
 
   it("adds a transaction to the pool", () => {
