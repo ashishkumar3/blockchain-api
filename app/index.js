@@ -11,7 +11,7 @@ const app = express();
 const bc = new Blockchain();
 const wallet = new Wallet();
 const tp = new TransactionPool();
-const p2pServer = new P2pServer(bc);
+const p2pServer = new P2pServer(bc, tp);
 
 app.use(bodyParser.json());
 
@@ -37,6 +37,8 @@ app.post("/transact", (req, res) => {
   const { recipient, amount } = req.body;
   // create transaction in the pool
   const transaction = wallet.createTransaction(recipient, amount, tp);
+  // then we broadcasst iot to the p2p netwrok
+  p2pServer.broadcastTransaction(transaction);
   res.redirect("/transactions");
 });
 

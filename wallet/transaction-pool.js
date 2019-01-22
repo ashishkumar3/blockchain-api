@@ -3,6 +3,7 @@ class TransactionPool {
     this.transactions = [];
   }
 
+  // update or add the transaction to the transaction array i.e. transaction pool
   updateOrAddTransaction(transaction) {
     // check if transaction already exists in the transactions array or not
     let transactionWithId = this.transactions.find(

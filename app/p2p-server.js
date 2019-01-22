@@ -8,9 +8,16 @@ const P2P_PORT = process.env.P2P_PORT || 5001;
 // then we create an array of all web sockets addresses (PEERS=ws://localhost:5001,ws://localhost:5002...) only if the PEERS environment variable is present.
 const peers = process.env.PEERS ? process.env.PEERS.split(",") : [];
 
+// in order to check what type of message/data we recieve that is shared across the p2p network we need a way to type check the message/data recieved.
+const MESSAGE_TYPE = {
+  chain: "CHAIN",
+  transaction: "TRANSACTION"
+};
+
 class P2pServer {
-  constructor(blockchain) {
+  constructor(blockchain, transactionPool) {
     this.blockchain = blockchain;
+    this.transactionPool = transactionPool;
     this.sockets = [];
   }
 
@@ -49,22 +56,50 @@ class P2pServer {
     this.sendChain(socket);
   }
 
-  // whenever gets a message, parse it and log it on console
+  // whenever gets a message, parse it and log it on console and check for the type of the message and send it across the network
   messageHandler(socket) {
     socket.on("message", message => {
       const data = JSON.parse(message);
-      this.blockchain.replaceChain(data);
+
+      // as we have to apply function according to the incoming data type, we switch over the data type and if we get a chain then we replace the chain in the p2p network else we add or update the transaction in the mempool in the network
+      switch (data.type) {
+        case MESSAGE_TYPE.chain:
+          this.blockchain.replaceChain(data.chain);
+          break;
+        case MESSAGE_TYPE.transaction:
+          this.transactionPool.updateOrAddTransaction(data.transaction);
+          break;
+      }
     });
   }
 
   sendChain(socket) {
     // broadcast blockchain to all peers(sockets) (only sends strings)
-    socket.send(JSON.stringify(this.blockchain.chain));
+    socket.send(
+      JSON.stringify({
+        type: MESSAGE_TYPE.chain,
+        chain: this.blockchain.chain
+      })
+    );
+  }
+
+  sendTransaction(socket, transaction) {
+    socket.send(
+      JSON.stringify({
+        type: MESSAGE_TYPE.transaction,
+        transaction
+      })
+    );
   }
 
   // send the updated blockchain of this current instance to all socket peers
   syncChain() {
     this.sockets.forEach(socket => this.sendChain(socket));
+  }
+
+  // synchronise transaction pool across the peep-to-peer network.
+  broadcastTransaction(transaction) {
+    this.sockets.forEach(socket => this.sendTransaction(socket, transaction));
   }
 }
 
