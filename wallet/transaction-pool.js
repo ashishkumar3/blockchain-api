@@ -30,7 +30,7 @@ class TransactionPool {
   }
 
   // return the transaction from the pool if valid
-  validTransaction() {
+  validTransactions() {
     // take every transaction from the pool and check if
     return this.transactions.filter(transaction => {
       // 1. total output amount is equal to the total input amount

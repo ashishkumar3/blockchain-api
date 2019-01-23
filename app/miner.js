@@ -8,6 +8,7 @@ class Miner {
 
   mine() {
     // grab the valid transaction from the transaction pool(unconfirmed transactions)
+    const validTransactions = this.transactionPool.validTransactions();
     // include a reward for the miner
     // create a block whose data consists of those valid transactions and add to the blockchain
     // synchronize the chains in the p2p network

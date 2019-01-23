@@ -8,7 +8,7 @@ describe("Transaction Pool", () => {
   beforeEach(() => {
     tp = new TransactionPool();
     wallet = new Wallet();
-    transaction = wallet.createTransaction("recipient address", 40);
+    transaction = wallet.createTransaction("recipient address", 40, tp);
   });
 
   it("adds a transaction to the pool", () => {
@@ -25,4 +25,12 @@ describe("Transaction Pool", () => {
       JSON.stringify(tp.transactions.find(t => t.id === newTransaction.id))
     ).not.toEqual(oldTransaction);
   });
+
+  // describe("mixing valid and corrupt transactions", () => {
+  //   let validTransactions;
+
+  //   beforeEach(() => {
+  //     validTransactions = tp.validTransactions();
+  //   })
+  // });
 });

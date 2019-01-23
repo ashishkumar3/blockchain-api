@@ -1,4 +1,5 @@
 const ChainUtil = require("../chain-util");
+const MINE_REWARD = require("../config");
 
 // Every transaction object contains unique id, input and output
 // while creating a transaction a user has to pass his totalbalance, signature and public key of the wallet.
@@ -32,10 +33,17 @@ class Transaction {
     return this;
   }
 
+  static transactionWithOutputs(senderWallet, outputs) {
+    const transaction = new this();
+    transaction.outputs.push(...outputs);
+    // everytime a transaction is created we sign it to maeke sure it the actual sender sent the money.
+    Transaction.signTransaction(transaction, senderWallet);
+    return transaction;
+  }
+
   // For creating a new transaction we need the wallet of the sender whcih contains the information such as his key set and balance, the address of the recipient to which the money has to be sent, and the amount of money to be sent.
 
   static newTransaction(senderWallet, recipient, amount) {
-    const transaction = new this();
     // console.log(transaction);
 
     // check if balance is available to make the transaction
@@ -45,27 +53,30 @@ class Transaction {
     }
 
     // then push it to the outputs of the list of transactions.
-    transaction.outputs.push(
-      ...[
-        {
-          amount: senderWallet.balance - amount,
-          address: senderWallet.publicKey
-        },
-        { amount, address: recipient }
-      ]
-    );
+    return Transaction.transactionWithOutputs(senderWallet, [
+      {
+        amount: senderWallet.balance - amount,
+        address: senderWallet.publicKey
+      },
+      { amount, address: recipient }
+    ]);
 
     // console.log("trnsaction output", transaction.outputs);
-
-    // everytime a transaction is created we sign it to maeke sure it the actual sender sent the money.
-    Transaction.signTransaction(transaction, senderWallet);
 
     // if (Transaction.verifyTransaction(transaction, senderWallet)) {
     //   return transaction;
     // } else {
     //   console.log("Data might have been tempered");
     // }
-    return transaction;
+  }
+
+  static rewardTransaction(minerWallet, blockchainWallet) {
+    return Transaction.transactionWithOutputs(blockchainWallet, [
+      {
+        amount: MINE_REWARD,
+        address: minerWallet.publicKey
+      }
+    ]);
   }
 
   // when signing a transaction we add it to the input object of the transaction object along with current time, amount and address.
