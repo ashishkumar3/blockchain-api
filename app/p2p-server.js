@@ -12,7 +12,8 @@ const peers = process.env.PEERS ? process.env.PEERS.split(",") : [];
 // in order to check what type of message/data we recieve that is shared across the p2p network we need a way to type check the message/data recieved.
 const MESSAGE_TYPE = {
   chain: "CHAIN",
-  transaction: "TRANSACTION"
+  transaction: "TRANSACTION",
+  clearTransactions: "CLEARTRANSACTIONS"
 };
 
 class P2pServer {
@@ -72,6 +73,9 @@ class P2pServer {
         case MESSAGE_TYPE.transaction:
           this.transactionPool.updateOrAddTransaction(data.transaction);
           break;
+        case MESSAGE_TYPE.clearTransactions:
+          this.transactionPool.clear();
+          break;
       }
     });
   }
@@ -103,6 +107,17 @@ class P2pServer {
   // synchronize transaction pool across the peep-to-peer network.
   broadcastTransaction(transaction) {
     this.sockets.forEach(socket => this.sendTransaction(socket, transaction));
+  }
+
+  // broadcast clear transactions
+  broadcastClearTransaction() {
+    this.sockets.forEach(socket =>
+      socket.send(
+        JSON.stringify({
+          type: MESSAGE_TYPE.clearTransactions
+        })
+      )
+    );
   }
 }
 
