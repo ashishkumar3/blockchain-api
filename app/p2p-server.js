@@ -110,7 +110,7 @@ class P2pServer {
   }
 
   // broadcast clear transactions
-  broadcastClearTransaction() {
+  broadcastClearTransactions() {
     this.sockets.forEach(socket =>
       socket.send(
         JSON.stringify({

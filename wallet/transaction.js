@@ -1,5 +1,5 @@
 const ChainUtil = require("../chain-util");
-const MINE_REWARD = require("../config");
+const { MINING_REWARD } = require("../config");
 
 // Every transaction object contains unique id, input and output
 // while creating a transaction a user has to pass his totalbalance, signature and public key of the wallet.
@@ -71,9 +71,10 @@ class Transaction {
   }
 
   static rewardTransaction(minerWallet, blockchainWallet) {
+    console.log(MINING_REWARD);
     return Transaction.transactionWithOutputs(blockchainWallet, [
       {
-        amount: MINE_REWARD,
+        amount: MINING_REWARD,
         address: minerWallet.publicKey
       }
     ]);
