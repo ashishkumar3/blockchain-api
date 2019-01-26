@@ -1,6 +1,15 @@
 const Transaction = require("../wallet/transaction");
 const Wallet = require("../wallet");
 
+/**
+ * MINE TRANSACTION REWARD
+ * THIS TRANSACTIONS'S OUTPUT ARRAY OF OBJECTS CONTAIN ONLY ONE OBJECT
+ * {
+ *    "amount" : reward amount,
+ *    "address" : "public key of the miner"
+ * }
+ */
+
 class Miner {
   constructor(blockchain, transactionPool, wallet, p2pServer) {
     this.blockchain = blockchain;

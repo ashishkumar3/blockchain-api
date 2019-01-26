@@ -51,7 +51,7 @@ app.post("/transact", (req, res) => {
   // we assume that the user sends the address and amount through post request
   const { recipient, amount } = req.body;
   // create transaction in the pool
-  const transaction = wallet.createTransaction(recipient, amount, tp);
+  const transaction = wallet.createTransaction(recipient, amount, bc, tp);
   // then we broadcasst iot to the p2p netwrok
   p2pServer.broadcastTransaction(transaction);
   res.redirect("/transactions");

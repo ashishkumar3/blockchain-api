@@ -1,12 +1,14 @@
 const Wallet = require("./index");
 const TransactionPool = require("./transaction-pool");
+const Blockchain = require("../blockchain");
 
 describe("Wallet", () => {
-  let wallet, transactionPool;
+  let wallet, transactionPool, bc;
 
   beforeEach(() => {
     wallet = new Wallet();
     transactionPool = new TransactionPool();
+    bc = new Blockchain();
   });
 
   // situation where a wallet is creating a transaction
@@ -19,13 +21,14 @@ describe("Wallet", () => {
       transaction = wallet.createTransaction(
         recipient,
         sendAmount,
+        bc,
         transactionPool
       );
     });
     // situation where we are doing the same transaction
     describe(" doing the same transaction", () => {
       beforeEach(() => {
-        wallet.createTransaction(recipient, sendAmount, transactionPool);
+        wallet.createTransaction(recipient, sendAmount, bc, transactionPool);
       });
 
       //

@@ -7,6 +7,34 @@ const { MINING_REWARD } = require("../config");
 // First object contains amount to send and address to which the amount has to be sent.
 // Sencond object contains the amount that the sender recieve back(change) and the address to wich the change is to be sent i.e. senders own address(public key)
 
+/*
+    TRANSACTION-
+      {
+        "id": "unique id for every transaction",
+        "input": {
+          TIME, AMOUNT TO SEND, PUBLIC KEY OF SENDER, SIGNATURE
+          "timestamp": 123455689,
+          "amount": 40,
+          "address": "public key of sender",
+          "signature": "proof that sender has actually made transaction"
+        },
+        "output": [
+          ARRAY OF ALL THE TRANSACTIONS TO BE MADE BY THE SYSTEM
+          1st TRANSACTION OBJECT IS ALWAYS THE REMAINING BALANCE OF SENDER
+          {
+            "amount" : 120, // change that goes back to the sender (total - sendAmount = this amount)
+            "address" : "public key of sender"
+          },
+          "REST TRANSACTIONS ARE THAT THE SENDER WANT TO SEND TO OTHER PEOPLE"
+          {
+            amount : "30",
+            address : "public key of the recipient"
+          },
+          .... list of all other transactions
+        ]
+      }
+*/
+
 class Transaction {
   constructor() {
     this.id = ChainUtil.id();
