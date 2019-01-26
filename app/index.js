@@ -1,4 +1,5 @@
 const express = require("express");
+// const path = require("path");
 const bodyParser = require("body-parser");
 const Blockchain = require("../blockchain");
 const P2pServer = require("./p2p-server");
@@ -16,6 +17,7 @@ const p2pServer = new P2pServer(bc, tp);
 const miner = new Miner(bc, tp, wallet, p2pServer);
 
 app.use(bodyParser.json());
+app.use(express.static("public"));
 
 app.get("/blocks", (req, res) => {
   res.json(bc.chain);
@@ -32,9 +34,8 @@ app.post("/mine", (req, res) => {
 app.post("/mine-transactions", (req, res) => {
   // craete mine block
   const block = miner.mine();
-  bc.addBlock(block);
-  p2pServer.syncChain();
-  // redirect to blocoks
+  console.log(`New block has been added: ${block.toString()}`);
+  // redirect to blocks
   res.redirect("/blocks");
 });
 
