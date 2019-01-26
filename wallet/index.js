@@ -52,7 +52,7 @@ class Wallet {
   }
 
   calculateBalance(blockchain) {
-    const balance = this.balance;
+    let balance = this.balance;
     let transactions = [];
     // For each block in a blockchain, and for each data part(all transactions) in a block we take those transactions and push them in the transactions array.
     blockchain.chain.forEach(block =>
